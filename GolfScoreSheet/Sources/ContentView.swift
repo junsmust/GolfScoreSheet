@@ -1,11 +1,23 @@
 import SwiftUI
 
 public struct ContentView: View {
+    @State private var isMainScreenShow: Bool = false
+    
     public init() {}
 
     public var body: some View {
-        Text("Hello, World!")
-            .padding()
+        if isMainScreenShow {
+            MainView()
+        }
+        else {
+            SplashView().onAppear(perform: {
+                DispatchQueue.main.asyncAfter(deadline: .now()+1.5) {
+                    withAnimation {
+                        isMainScreenShow = true
+                    }
+                }
+            })
+        }
     }
 }
 
