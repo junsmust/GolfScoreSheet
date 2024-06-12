@@ -9,6 +9,13 @@ import SwiftUI
 
 struct MainView: View {
     @State var isPlayPressed: Bool = false
+    @State var step: PlaygroundStepType = .memberCount
+    
+    @State var memberCount: Int = 0 {
+        didSet {
+            print("member count : \(memberCount)")
+        }
+    }
     
     var body: some View {
         VStack(content: {
@@ -23,40 +30,25 @@ struct MainView: View {
         .background(.white)
         .cornerRadius(8.0)
         .shadow(radius: 3)
-        
         .sheet(isPresented: $isPlayPressed, content: {
-            BottomSheetView()
-                .presentationDetents([.cus])
-                //.presentationDetents([.fraction(0.2)])
-                .presentationDragIndicator(.hidden)
+            switch step {
+            case .memberCount:
+                MemberBottomView(memberCount: $memberCount, step: $step)
+                    .presentationDetents([])
+                    .presentationDetents([.fraction(0.2)])
+                    .presentationDragIndicator(.hidden)
+                
+            default:
+                PlayerNameInputBottomView()
+                    .presentationDetents([])
+                    .presentationDetents([.fraction(0.2)])
+                    .presentationDragIndicator(.hidden)
+            }
         })
     }
 }
 
-struct BottomSheetView: View {
-    var body: some View {
-        HStack(content: {
-            Text("플레이는 몇명인가요?")
-                .font(.subheadline)
-                
-            Spacer()
-            HStack(content: {
-                Button(action: {}, label: {
-                    Image(systemName: "minus.circle")
-                })
-                .tint(.black)
-                
-                Text("0")
-                
-                Button(action: {}, label: {
-                    Image(systemName: "plus.circle")
-                })
-                .tint(.black)
-            })
-        })
-        .padding(.horizontal, 20)
-    }
-}
+
 #Preview {
     MainView()
 }
